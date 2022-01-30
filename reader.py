@@ -2,23 +2,12 @@ import csv
 from sys import argv, exit
 from os import listdir, path, getcwd
 
-
-"""
-class Parameters():
-    def __init__ (self, sc_odczyt, sc_zapis, *zmiany)
-        self.sc_odczyt
-        self.sc_zapis
-        self.
-"""    
-
 try:
     sciezka_odczyt = argv[1]
     sciezka_zapis = argv[2]
 except IndexError:
     exit("nie podano argumentów")
-    #print("nie podano argumentów")
-    #sciezka_odczyt = None
-    #sciezka_zapis = None
+
 else:
     sciezka_odczyt = argv[1]
     sciezka_zapis = argv[2]
@@ -30,21 +19,22 @@ def odczyt_csv(sciezka):
         data = list(reader)
     return data
 
-try:
-    print("lista plikow: ",listdir(sciezka_odczyt))
-except FileNotFoundError:
-    print("nie ma takiego katalogu")
+if path.exists(sciezka_odczyt):
+    if path.isfile(sciezka_odczyt):
+        pass
+    else:
+        quit(
+            "\nścieżka odczytu nie jest plikiem!\nPoniżej lista plików z katalogu"
+            f" [{path.abspath(sciezka_odczyt)}]:\n{listdir(sciezka_odczyt)}\n"
+            )
+else:
+    quit("ścieżka odczytu nie istnieje")
 
-
-print("czy sciezka istnieje: ",path.exists(argv[1]))
-print("czy sciezka jest plikiem: ",path.isfile(argv[1]))
-print("czy sciezka jest dir: ",path.isdir(argv[1]))
-print("abs patch: ",path.abspath(sciezka_odczyt))
-
+if not path.isfile(sciezka_zapis):
+    if path.isdir(path.abspath(sciezka_zapis)):
+        quit("\nnie podano nazwy pliku do zapisu\n")
  
-data = odczyt_csv("sn.csv")
-
-#print(data)
+data = odczyt_csv(sciezka_odczyt)
 
 if len(argv) > 3:
     zmiany = argv[3:]
@@ -72,7 +62,4 @@ def zapis_csv(sciezka):
         writer = csv.writer(plik)
         writer.writerows(data)
 
-zapis_csv("sn2.csv")
-
-
-#data2 = [['Game Number', 'Game Length'], ['1', '30,1'], ['2', '29'], ['3', '31'], ['4', '16'], ['5', '24'], ['6', '29'], ['7', '28'], ['8', '117'], ['9', '42'], ['10', '23']]
+zapis_csv(sciezka_zapis)
